@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { api } from "@/lib/api";
+import { api, HttpMethod } from "@/lib/api";
 
 // Assuming you're using shadcn/ui components
 
@@ -36,21 +36,27 @@ const BuyerForm: React.FC<BuyerFormProps> = ({ defaultValues }) => {
   const onSubmit = async (data: BuyerFormValues) => {
     if (defaultValues) {
       // Update existing buyer
-      const res = await api.put(`/buyers/${defaultValues._id}`, data);
+      const res = await api({
+        method: HttpMethod.PUT,
+        url: `/buyers/${data._id}`,
+        body: data,
+      });
       reset();
       if (res) {
         // Handle success
-        console.log(res);
       } else {
         // Handle error
       }
       return;
     }
-    const res = await api.post("/buyers", data);
+    const res = await api({
+      method: HttpMethod.POST,
+      url: "/buyers",
+      body: data,
+    });
     reset();
     if (res) {
       // Handle success
-      console.log(res);
     } else {
       // Handle error
     }

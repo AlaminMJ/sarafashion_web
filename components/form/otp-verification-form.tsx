@@ -17,7 +17,7 @@ import {
 import Link from "next/link";
 
 import { KeyRound, Loader2 } from "lucide-react";
-import { OtpInput } from "../ui/otp-input";
+// import { OtpInput } from "../ui/otp-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const otpVerificationSchema = z
@@ -57,7 +57,7 @@ export function OtpVerificationForm({ email }: OtpVerificationFormProps) {
     setIsLoading(true);
     // Simulate API call to verify OTP and reset password
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("Password reset for:", email, "with data:", data);
+
     setIsLoading(false);
     // Redirect to login page or show success message
     alert("Password reset successfully. Please login with your new password.");
@@ -76,13 +76,13 @@ export function OtpVerificationForm({ email }: OtpVerificationFormProps) {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="otp">OTP</Label>
-            <OtpInput
+            {/* <OtpInput
               id="otp"
               length={6}
               onComplete={(value) => {
                 setValue("otp", value);
               }}
-            />
+            /> */}
             {errors.otp && (
               <p className="text-sm text-red-500">{errors.otp.message}</p>
             )}

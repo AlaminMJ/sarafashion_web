@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/shared/ConfirmModal";
-import { api } from "@/lib/api";
+import { api, HttpMethod } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { FormDialog } from "@/components/shared/formModal";
 import BuyerForm from "@/components/form/Buyer-form";
@@ -27,7 +27,10 @@ const ActionsCell: React.FC<{ row: any }> = ({ row }) => {
 
   const handleConfirm = async () => {
     try {
-      const res = await api.delete(`/buyers/${data._id}`);
+      const res = await api({
+        method: HttpMethod.DELETE,
+        url: `/buyers/${data._id}`,
+      });
       // handle deletion logic here, e.g., remove the row from the table
       toast({ description: "Buyer deleted successfully" });
     } catch (error) {

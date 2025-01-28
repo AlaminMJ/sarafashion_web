@@ -1,12 +1,15 @@
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
-import { serverApiRequest } from "@/lib/apiServer";
 import { FormDialog } from "@/components/shared/formModal";
 import BuyerForm from "@/components/form/Buyer-form";
 import { Button } from "@/components/ui/button";
+import { api, HttpMethod } from "@/lib/api";
 
 const MerchandisersPage = async () => {
-  const { data } = await serverApiRequest("GET", "/buyers");
+  const { data } = await api<{ data: any[] }, any>({
+    method: HttpMethod.GET,
+    url: "/buyers",
+  });
   return (
     <div>
       <div className="flex items-end justify-end m-4 ">

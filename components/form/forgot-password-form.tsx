@@ -41,7 +41,7 @@ export function ForgotPasswordForm({ onOtpSent }: ForgotPasswordFormProps) {
     setIsLoading(true);
     // Simulate API call to send OTP
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("OTP sent to:", data.email);
+
     setIsLoading(false);
     onOtpSent(data.email);
   };

@@ -18,8 +18,9 @@ import {
 import Link from "next/link";
 import { UserPlus, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { signup } from "@/lib/auth";
+
 import { toast } from "@/hooks/use-toast";
+import { signup } from "@/lib/auth";
 
 const signupSchema = z
   .object({
@@ -54,12 +55,17 @@ export function SignupForm() {
     setIsLoading(true);
     // Simulate API call
     try {
-      const res: any = await signup(data.name, data.email, data.password);
-      document.cookie = `token=${res?.data?.token}; path=/; max-age=3600; `;
+      const res: any = await signup({
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      });
+      document.cookie = `token=${res.data.token}; path=/; max-age=3600; `;
       router.push("/dashboard");
       toast({ description: "Account Created in successfully" });
     } catch (error) {
       toast({ description: "Login failed. Please check your credentials." });
+      console.log(error);
     }
 
     setIsLoading(false);

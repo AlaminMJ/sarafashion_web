@@ -1,4 +1,4 @@
-import { FileManagement } from "./file-management";
+import FileManagement from "./file-management";
 
 const FilePage = () => {
   return (

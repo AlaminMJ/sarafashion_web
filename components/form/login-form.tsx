@@ -44,13 +44,15 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormValues): Promise<void> => {
     setIsLoading(true);
     try {
-      const res: any = await login(data.email, data.password);
+      const res = (await login({
+        email: data.email,
+        password: data.password,
+      })) as unknown as { data: { token: string } };
       document.cookie = `token=${res?.data?.token}; path=/; max-age=3600; `;
       router.push("/dashboard");
       toast({ description: "Logged in successfully" });
     } catch (error: any) {
       toast({ description: "Login failed. Please check your credentials." });
-      console.log(error);
     }
     setIsLoading(false);
   };

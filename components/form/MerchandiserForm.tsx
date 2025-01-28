@@ -1,11 +1,12 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { FormField, FormItem, FormControl } from "../ui/form";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useForm } from "react-hook-form";
 
 // Zod schema for Merchandiser
 const merchandiserSchema = z.object({
@@ -22,9 +23,7 @@ const MerchandiserForm: React.FC = () => {
     resolver: zodResolver(merchandiserSchema),
   });
 
-  const onSubmit = (data: MerchandiserFormValues) => {
-    console.log("Form Submitted:", data);
-  };
+  const onSubmit = (data: MerchandiserFormValues) => {};
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

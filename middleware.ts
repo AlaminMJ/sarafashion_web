@@ -9,20 +9,22 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const res = await verifyToken(token);
+    const res = (await verifyToken(token)) as {
+      data: { role: string };
+    };
 
     // Check for admin routes
     if (request.nextUrl.pathname.startsWith("/admin")) {
-      if (res?.data?.role !== "admin") {
+      if (res.data?.role !== "admin") {
         return NextResponse.redirect(new URL("/unauthorized", request.url));
       }
     }
     // Check for admin routes
-    // if (request.nextUrl.pathname.startsWith("/dashboard")) {
-    //   if (res?.data?.role !== "admin") {
-    //     return NextResponse.redirect(new URL("/unauthorized", request.url));
-    //   }
-    // }
+    if (request.nextUrl.pathname.startsWith("/dashboard")) {
+      if (res.data.role !== "admin" && res.data.role !== "user") {
+        return NextResponse.redirect(new URL("/unauthorized", request.url));
+      }
+    }
 
     return NextResponse.next();
   } catch (error) {

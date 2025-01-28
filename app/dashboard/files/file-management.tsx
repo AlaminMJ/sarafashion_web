@@ -15,7 +15,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/api";
+import { api, HttpMethod } from "@/lib/api";
 
 const FileManagement: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -27,9 +27,13 @@ const FileManagement: React.FC = () => {
   const loadFiles = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await api.get<{ data: File[] }>("/files");
-      const fetchedFiles: File[] = response.data.data;
-      setFiles(fetchedFiles);
+      const response = await api({
+        method: HttpMethod.GET,
+        url: "/files",
+      });
+
+      const data = response.data as { data: File[] };
+      setFiles(data.data);
     } catch (error) {
       toast({
         title: "Error",
@@ -45,12 +49,16 @@ const FileManagement: React.FC = () => {
   useEffect(() => {
     loadFiles();
   }, [loadFiles]);
-
   const handleSubmit = async (data: File) => {
     try {
       if (editingFile) {
-        const response = await api.put(`/files/${data._id}`, data);
-        const updatedFile: File = response.data as File;
+        const response = await api({
+          method: HttpMethod.PUT,
+          url: `/files/${editingFile.fileNo}`,
+          body: data,
+        });
+        const updatedFile: File = (response.data as { data: { file: File } })
+          .data.file;
         setFiles(
           files.map((file) =>
             file.fileNo === updatedFile.fileNo ? updatedFile : file
@@ -62,8 +70,13 @@ const FileManagement: React.FC = () => {
           description: `File ${updatedFile.fileNo} has been successfully updated.`,
         });
       } else {
-        const res = await api.post<{ data: { file: File } }>("/files", data);
-        const newFile: File = res.data.data.file;
+        const newFile: File = (
+          await api<any, any>({
+            method: HttpMethod.POST,
+            url: "/files",
+            body: data,
+          })
+        ).data.data.file;
         setFiles([newFile, ...files]);
         toast({
           title: "File created",
@@ -88,8 +101,11 @@ const FileManagement: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await api.delete(`/files/${id}`);
-      if (res.status === 200) {
+      const response = await api<any, { status: number }>({
+        method: HttpMethod.DELETE,
+        url: `/files/${id}`,
+      });
+      if (response) {
         setFiles(files.filter((file) => file._id !== id));
         toast({
           title: "File deleted",
